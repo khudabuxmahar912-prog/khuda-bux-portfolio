@@ -1,0 +1,24 @@
+{
+  "name": "khuda-bux-portfolio",
+  "version": "1.0.0",
+  "description": "A lightweight, responsive personal portfolio built with HTML5, CSS3 and vanilla JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khudabuxmahar912-prog/khuda-bux-portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/khudabuxmahar912-prog/khuda-bux-portfolio/issues"
+  },
+  "homepage": "https://github.com/khudabuxmahar912-prog/khuda-bux-portfolio#readme",
+  "dependencies": {
+    "nodemailer": "^10.0.13"
+  }
+}

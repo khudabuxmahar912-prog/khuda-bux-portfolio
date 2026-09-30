@@ -1,73 +1,76 @@
-const body = document.body;
-const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
-const themeToggle = document.getElementById("themeToggle");
-const navLinks = document.querySelectorAll(".nav-link");
-const backToTop = document.getElementById("backToTop");
-const year = document.getElementById("year");
-const contactForm = document.getElementById("contactForm");
-const formStatus = document.getElementById("formStatus");
+// ==========================================
+// PORTFOLIO MAIN JAVASCRIPT & CONTACT FORM
+// ==========================================
 
-year.textContent = new Date().getFullYear();
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Mobile Menu Toggle (if applicable)
+  const navToggle = document.querySelector('.nav-toggle');
+  const navMenu = document.querySelector('.nav-menu');
 
-const savedTheme = localStorage.getItem("kb-theme");
-if (savedTheme === "light") body.classList.add("light");
-updateThemeIcon();
-
-function updateThemeIcon() {
-  themeToggle.textContent = body.classList.contains("light") ? "☾" : "☼";
-  themeToggle.setAttribute("aria-label", body.classList.contains("light") ? "Switch to dark mode" : "Switch to light mode");
-}
-themeToggle.addEventListener("click", () => {
-  body.classList.toggle("light");
-  localStorage.setItem("kb-theme", body.classList.contains("light") ? "light" : "dark");
-  updateThemeIcon();
-});
-
-menuToggle.addEventListener("click", () => {
-  const open = navMenu.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
-});
-navLinks.forEach(link => link.addEventListener("click", () => {
-  navMenu.classList.remove("open");
-  menuToggle.setAttribute("aria-expanded", "false");
-}));
-
-const sections = document.querySelectorAll("main section[id]");
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const id = entry.target.id;
-      navLinks.forEach(link => link.classList.toggle("active", link.getAttribute("href") === `#${id}`));
-    }
-  });
-}, { rootMargin: "-35% 0px -55% 0px" });
-sections.forEach(section => observer.observe(section));
-
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
-
-window.addEventListener("scroll", () => {
-  backToTop.classList.toggle("show", window.scrollY > 600);
-}, { passive: true });
-backToTop.addEventListener("click", () => window.scrollTo({top: 0, behavior: "smooth"}));
-
-contactForm.addEventListener("submit", event => {
-  const action = contactForm.getAttribute("action");
-  if (action.includes("YOUR-EMAIL@example.com")) {
-    event.preventDefault();
-    formStatus.textContent = "Form is ready, but you must replace YOUR-EMAIL@example.com with your real email first.";
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
   }
-});
 
-document.querySelectorAll(".disabled-link").forEach(link => {
-  link.addEventListener("click", e => e.preventDefault());
+  // 2. Smooth Scrolling for Navigation Links
+  const navLinks = document.querySelectorAll('a[href^="#"]');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId !== '#') {
+        e.preventDefault();
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  });
+
+  // 3. Contact Form Submission via Node.js / Vercel Serverless API
+  const contactForm = document.getElementById('contactForm');
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.innerText : 'Send Message';
+      if (submitBtn) submitBtn.innerText = 'Sending...';
+
+      // Gather Form Input Values
+      const formData = {
+        name: document.getElementById('name')?.value || '',
+        email: document.getElementById('email')?.value || '',
+        subject: document.getElementById('subject')?.value || 'Portfolio Contact',
+        message: document.getElementById('message')?.value || '',
+      };
+
+      try {
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          alert('Message successfully send ho gaya!');
+          contactForm.reset();
+        } else {
+          alert('Error: ' + (result.error || 'Message send nahi ho saka.'));
+        }
+      } catch (error) {
+        alert('Network issue: ' + error.message);
+      } finally {
+        if (submitBtn) submitBtn.innerText = originalBtnText;
+      }
+    });
+  }
 });
