@@ -325,9 +325,37 @@
         <div class="section-heading">
           <p class="eyebrow">GET IN TOUCH</p>
           <h2>Let's <span>Connect.</span></h2>
-          <p>Feel free to reach out via email or social links below.</p>
-          <div style="margin-top: 20px;">
-            <a href="mailto:khudabuxmahar912@gmail.com" class="btn btn-primary">Email Me ✉</a>
+          <p>Fill out the form below to send me a direct message.</p>
+    
+          <!-- Contact Form -->
+          <form id="contactForm" onsubmit="handleFormSubmit(event)"
+            style="max-width: 600px; margin: 30px auto 0 auto; text-align: left;">
+            <div style="margin-bottom: 15px;">
+              <label for="name" style="display: block; margin-bottom: 5px; font-weight: 500;">Aapka Naam</label>
+              <input type="text" id="name" name="name" required placeholder="Full Name"
+                style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: inherit;">
+            </div>
+    
+            <div style="margin-bottom: 15px;">
+              <label for="email" style="display: block; margin-bottom: 5px; font-weight: 500;">Aapki Email</label>
+              <input type="email" id="email" name="email" required placeholder="name@example.com"
+                style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: inherit;">
+            </div>
+    
+            <div style="margin-bottom: 20px;">
+              <label for="message" style="display: block; margin-bottom: 5px; font-weight: 500;">Message</label>
+              <textarea id="message" name="message" rows="4" required placeholder="Apna message yahan likhein..."
+                style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: inherit;"></textarea>
+            </div>
+    
+            <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; cursor: pointer;">Send Message
+              ✉</button>
+          </form>
+    
+          <!-- Social Links Backup -->
+          <div style="margin-top: 30px;">
+            <p style="margin-bottom: 10px; font-size: 0.9em; opacity: 0.8;">Ya phir direct social links se connect karein:
+            </p>
             <a href="https://www.linkedin.com/in/khuda-bux-mahar-793736323" target="_blank"
               class="btn btn-secondary">LinkedIn ↗</a>
             <a href="https://github.com/khudabuxmahar912-prog" target="_blank" class="btn btn-ghost">GitHub ↗</a>
@@ -335,6 +363,41 @@
         </div>
       </div>
     </section>
+    
+    <!-- JavaScript for Handling Form Submit -->
+    <script>
+      async function handleFormSubmit(event) {
+        event.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.innerText = 'Sending...';
+        submitBtn.disabled = true;
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        try {
+          const response = await fetch('/api/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message })
+          });
+
+          if (response.ok) {
+            alert('Aapka message kamyaabi se bhej diya gaya hai!');
+            document.getElementById('contactForm').reset();
+          } else {
+            alert('Message bhejne mein masla hua, koshish karein ke dobara try karein.');
+          }
+        } catch (error) {
+          alert('Network error ki wajah se message nahi gaya.');
+        } finally {
+          submitBtn.innerText = 'Send Message ✉';
+          submitBtn.disabled = false;
+        }
+      }
+    </script>
+
   </main>
 
   <footer class="site-footer">
