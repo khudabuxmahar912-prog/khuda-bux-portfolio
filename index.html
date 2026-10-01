@@ -387,10 +387,10 @@
             alert('Aapka message kamyaabi se bhej diya gaya hai!');
             document.getElementById('contactForm').reset();
           } else {
-            alert('Message bhejne mein masla hua, koshish karein ke dobara try karein.');
+            alert('issue to send message.');
           }
         } catch (error) {
-          alert('Network error ki wajah se message nahi gaya.');
+          alert('Network error.');
         } finally {
           submitBtn.innerText = 'Send Message ✉';
           submitBtn.disabled = false;
