@@ -13,7 +13,6 @@ export default function Home() {
     setStatus('submitting');
 
     try {
-      // 1. Supabase Database mein save karein
       const { error: dbError } = await supabase
         .from('messages')
         .insert([
@@ -26,7 +25,6 @@ export default function Home() {
 
       if (dbError) throw dbError;
 
-      // 2. Resend API route ke zariye Email bhejein
       await fetch('/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,10 +52,17 @@ export default function Home() {
         <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mb-6 font-light leading-relaxed">
           Web Developer, AI/ML Enthusiast & AI Automation Specialist building responsive web applications, intelligent automation, and robust APIs.
         </p>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 items-center">
           <Link href="#projects" className="bg-teal-400 hover:bg-teal-500 text-slate-950 font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-teal-500/10">
             View Projects
           </Link>
+          <a 
+            href="/assets/resume/Khuda-Bux-CV.jpeg" 
+            download="Khuda-Bux-CV.jpeg"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-blue-600/10 flex items-center gap-2"
+          >
+            Download CV 📥
+          </a>
           <a 
             href="https://github.com/khudabuxmahar912-prog" 
             target="_blank" 
