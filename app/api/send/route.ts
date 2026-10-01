@@ -8,10 +8,7 @@ export async function POST(request: Request) {
     const { name, email, message } = await request.json();
 
     if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: 'All fields are required.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
     }
 
     const data = await resend.emails.send({
@@ -24,9 +21,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to send email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }
